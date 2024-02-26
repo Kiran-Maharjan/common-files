@@ -1,0 +1,239 @@
+
+...........command..............
+
+
+
+
+............   nginx.............
+
+sudo systemctl status nginx
+
+to reload::
+nginx -s reload
+
+..........docker ............
+create docker image::
+docker build . -t imageName
+
+run and change port for imageName::
+docker run -p 1111:7777 -d imageName
+
+
+stop n remove all service of docker
+docker stop $(docker ps -a -q) && docker rm $(docker ps -a -q)
+
+
+
+---- docker
+install..
+sudo yum install -y yum-utils
+sudo yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+sudo yum install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+ sudo systemctl start docker
+
+docket restart all service...
+Just run
+docker restart $(docker ps -q)
+Update
+For restarting ALL (stopped and running) containers use docker restart $(docker ps -a -q) as in answer lower.
+
+docker compose up
+
+docker container prune
+
+Kill all docker container ...
+docker kill $(docker ps -q)
+
+remove all docker container...
+docker rm $(docker ps -a -q)
+
+docker ps --format "{{.Names}}"
+
+
+get all id of container...
+docker ps -aq
+
+port listening..
+netstat -ltn
+
+docker-compose up -d
+docker-compose ps
+..........terminal. ..............
+
+-- move file
+scp srcFile.txt  username@your_server_ip:/path/to/destination/
+
+--Make your script executable:
+
+bash
+chmod +x your_script.sh
+
+-- remove , rm -rf, it will forcefully and recursively remove files and directories without asking for confirmation. 
+rm -rf 
+linux ..............................................
+to know machine version::
+uname --kernel-name --kernel-release --machine
+Linux 3.10.0-1062.1.1.el7.x86_64 x86_64
+
+to know if centos or ubuntu
+awk -F= '/^NAME/{print $2}' /etc/os-release
+
+to get centos version
+cat /etc/centos-release
+
+----- server
+sudo yum install -y yum-utils
+sudo yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+
+sudo yum install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+	
+sudo yum install epel-release
+sudo yum install nginx
+sudo service nginx start
+sudo service nginx status
+sudo chkconfig nginx on
+
+sudo yum -y update
+sudo yum -y install wget vim
+
+wget https://download.oracle.com/java/17/latest/jdk-17_linux-x64_bin.rpm
+sudo yum -y install ./jdk-17_linux-x64_bin.rpm
+
+
+
+
+We can check how much resources are consumed by our containers using docker stats:
+docker stats
+docker stats
+CONTAINER ID        NAME                                                        CPU %               MEM USAGE / LIMIT     MEM %               NET I/O             BLOCK I/O           PIDS
+af9519caa50f        einsteinish-elk-stack-with-docker-compose_logstash_1        2.81%               466.5MiB / 1.945GiB   23.43%              48.7kB / 216kB      0B / 0B             40
+2b9c23122e48        einsteinish-elk-stack-with-docker-compose_kibana_1          1.16%               288MiB / 1.945GiB     14.46%              901kB / 11.7MB      0B / 0B             12
+$ docker-compose ps
+                          Name                                         Command               State                                        Ports                                      
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+einsteinish-elk-stack-with-docker-compose_elasticsearch_1   /usr/local/bin/docker-entr ...   Up      0.0.0.0:9200->9200/tcp, 0.0.0.0:9300->9300/tcp                                  
+einsteinish-elk-stack-with-docker-compose_kibana_1          /usr/local/bin/dumb-init - ...   Up      0.0.0.0:5601->5601/tcp                                                          
+einsteinish-elk-stack-with-docker-compose_logstash_1        /usr/local/bin/docker-entr ...   Up      0.0.0.0:5000->5000/tcp, 0.0.0.0:5000->5000/udp, 5044/tcp, 0.0.0.0:9600->9600/tcp  
+
+
+lsof -nP -iTCP:5000
+\COMMAND     PID    USER   FD   TYPE             DEVICE SIZE/OFF NODE NAME
+com.docke 33800 ki.hong   35u  IPv4 0xd2b8428b995337cb      0t0  TCP *:5000 (LISTEN)
+com.docke 33800 ki.hong   36u  IPv6 0xd2b8428ba27692eb      0t0  TCP [::1]:5000 (LISTEN)
+
+
+$ cat /tmp/logstash-tutorial.log |nc -c localhost 5000 
+
+
+remove docker....
+sudo yum remove docker-ce docker-ce-cli containerd.io docker-compose-plugin
+
+
+----  nginx ....
+
+$ sudo systemctl start nginx  
+$ sudo service start nginx  
+sudo /etc/init.d/nginx start  
+
+to restart on... 
+$ sudo systemctl enable nginx  
+Or if you are using a Linux distribution without systemd then use the following command:
+$ sudo service nginx enable  
+$ sudo systemctl stop nginx  
+$ sudo systemctl stop nginx  
+
+The second way to stop Nginx is to send a signal to the Nginx master process. By default, Nginx stores its master process id to /usr/local/nginx/logs/nginx.pid.
+
+Here is the command to send the QUIT (Graceful Shutdown) signal to the Nginx master process:
+
+$ kill -QUIT $( cat /usr/local/nginx/logs/nginx.pid )  
+
+restart ..
+$ sudo systemctl restart nginx  
+
+reload ..
+$ sudo systemctl reload nginx  
+
+test before reload or restart..
+$ sudo nginx -t  
+
+
+------... consul command
+
+
+.... 
+
+sudo yum install -y yum-utils
+sudo yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+
+sudo yum install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+	
+sudo yum install epel-release
+sudo yum install nginx
+sudo service nginx start
+sudo service nginx status
+sudo chkconfig nginx on
+
+sudo yum -y update
+sudo yum -y install wget vim
+
+wget https://download.oracle.com/java/17/latest/jdk-17_linux-x64_bin.rpm
+sudo yum -y install ./jdk-17_linux-x64_bin.rpm
+
+
+
+--- .... deploy file, command : sh Deploy.sh 
+docker stop $(docker ps -a -q  --filter ancestor=api-gateway)
+docker container prune
+docker image prune
+docker build -t api-gateway .
+docker run -p 8000:8000 --network=consul_consul --name=api-gateway -d api-gateway
+
+--- docker compose, command: docker-compose up -d
+.. Dockerfile
+FROM openjdk:17
+VOLUME /tmp
+ARG JAR_FILE=Auth-Service-0.0.1-SNAPSHOT.jar
+ADD ${JAR_FILE} App.jar
+ENTRYPOINT ["java", "-Dspring.profiles.active=development", "-jar", "App.jar"]
+
+
+
+
+--- kill  process running on port 1313
+lsof -i :1313 
+n kill
+kill -9 2944 
+
+-- ngrok, to host local to internet,
+ngrok http --domain=ideal-brave-snail.ngrok-free.app 8000
+
+-- intellij to run applicaiton properties for different profile.
+to setup or chose profile.
+Under build and run>
+-Dspring.profiles.active=production
+under environment variable>
+SPRING_PROFILES_ACTIVE=application-production.yml
+
+=== to setup applicaiton properties from outside project
+spring boot setup config external:
+-Dspring.config.location = C:\application.properties
+--spring.profiles.active=dev	
+
+
+.. to run multiple instance in diffrent port in intellij
+-Dserver.port= 9008
+
+
+Dev:
+
+Docker version 23.0.5, build bc4487a
+
+SIT:
+
+
+#  servlet:
+#    context-path: /ewallet
+
+
+
