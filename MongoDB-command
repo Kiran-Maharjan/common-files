@@ -15,9 +15,11 @@ db.book.find().limit(2)
 db.book.find().count()
 db.book.find().sort(title:1)
 
-  greater /less
+#  greater /less
 db.book.find({stock:{$lt:11}})
-
 db.book.find({stock:{$gt:9,$lt:17}})
-
 db.book.find({stock:{$gt:9,$lt:17},genre:'Dystopian'})
+
+#Or And, Operators & Complex Queries
+db.book.find({$or:[{author:'Douglas Adams'},{stock:20}]})
+db.book.find({$or:[{stock:{$lt:11}},{stock:{$gt:19}}]})
