@@ -1,0 +1,23 @@
+#most used commands
+show dbs
+show collections
+cls
+
+# Search/find
+db.book.find()
+db.book.findOne()
+db.book.find({author:'Jane Austen',stock:25})
+db.book.find({},{title:1,author:1})
+
+#Operation:
+limit, count, sort
+db.book.find().limit(2)
+db.book.find().count()
+db.book.find().sort(title:1)
+
+  greater /less
+db.book.find({stock:{$lt:11}})
+
+db.book.find({stock:{$gt:9,$lt:17}})
+
+db.book.find({stock:{$gt:9,$lt:17},genre:'Dystopian'})
