@@ -23,3 +23,58 @@ db.book.find({stock:{$gt:9,$lt:17},genre:'Dystopian'})
 #Or And, Operators & Complex Queries
 db.book.find({$or:[{author:'Douglas Adams'},{stock:20}]})
 db.book.find({$or:[{stock:{$lt:11}},{stock:{$gt:19}}]})
+
+# $in & $nin
+db.book.find({stock:{$in:[20,25]}})
+    {
+      _id: ObjectId('6704cd9c67a16444a2fa5809'),
+      title: 'Pride and Prejudice',
+      author: 'Jane Austen',
+      genre: 'Romance',
+      publicationYear: 1813,
+      price: 18.99,
+      stock: 25,
+      description: 'A classic romance novel about social class and love in 19th-century England.'
+    }
+db.book.find({stock:{$nin:[20,25]}})
+  {
+  _id: ObjectId('6704001beb90a7c5f99f5712'),
+  title: "The Hitchhiker's Guide to the Galaxy",
+  author: 'Douglas Adams',
+  genre: 'Science Fiction',
+  publicationYear: 1979,
+  price: 19.99,
+  stock: 10,
+  description: 'A humorous science fiction novel that follows the adventures of Arthur Dent, a hapless Englishman who finds himself on a journey through the galaxy after the Earth is destroyed.'
+}
+
+#Query Array
+db.books.find({genres:{$all:["fantasy","sci-fi"]}}
+
+#nested query
+db.books.find({"review.name":"luigi"})
+
+#delete
+  db.book.deleteOne({_id: ObjectId('6704cd9c67a16444a2fa5808')})
+  {
+  acknowledged: true,
+  deletedCount: 1
+}
+
+  db.book.deleteMany({author:"name"})
+#update
+  db.book.updateOne({_id: ObjectId('6704cd9c67a16444a2fa5809')},{$set:{price:20}})
+      {
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 1,
+  modifiedCount: 1,
+  upsertedCount: 0
+}
+#update: increase value by 2
+  db.book.updateOne({_id: ObjectId('6704cd9c67a16444a2fa5809')},{$inc:{price:2}})
+
+#update: pull, push value from array
+  db.book.updateOne({_id: ObjectId('6704cd9c67a16444a2fa5809')},{$pull:{price:2}})
+  db.book.updateOne({_id: ObjectId('6704cd9c67a16444a2fa5809')},{$push:{price:2}})
+  db.book.updateOne({_id: ObjectId('6704cd9c67a16444a2fa5809')},{$push:{price:{$each:["1","2"]}}})
